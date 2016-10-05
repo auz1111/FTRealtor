@@ -22,7 +22,7 @@ namespace FTRealtor.Controllers
                            select s;
             if (MLSSearchInt != null)
             {
-                houses = houses.Where(s => s.MLSNum.Equals(MLSSearchInt));
+                houses = houses.Where(s => s.MLSNum == MLSSearchInt);
             }
 
             if (!String.IsNullOrEmpty(Street1SearchString))
@@ -47,20 +47,21 @@ namespace FTRealtor.Controllers
 
             if (BedroomsSearchInt != null)
             {
-                houses = houses.Where(s => s.Bedrooms.Equals(BedroomsSearchInt));
+                houses = houses.Where(s => s.Bedrooms == BedroomsSearchInt);
             }
 
             if (BathroomsSearchInt != null)
             {
-                houses = houses.Where(s => s.Bathrooms.Equals(BathroomsSearchInt));
+                houses = houses.Where(s => s.Bathrooms == BathroomsSearchInt);
             }
 
             if (SQFTSearchInt != null)
             {
-                houses = houses.Where(s => s.SquareFeet.Equals(SQFTSearchInt));
+                houses = houses.Where(s => s.SquareFeet == SQFTSearchInt);
             }
 
-            return View(db.Houses.ToList());
+           
+            return View(houses);
         }
 
         // GET: Houses/Details/5
