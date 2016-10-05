@@ -16,11 +16,34 @@ namespace FTRealtor.Controllers
         private AgencyContext db = new AgencyContext();
 
         // GET: Realtor
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder, string NameSearchString)
         {
-            return View(db.Realtors.ToList());
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
+            var realtors = from s in db.Realtors
+                           select s;
+            if (!String.IsNullOrEmpty(NameSearchString))
+            {
+                realtors = realtors.Where(s => s.LastName.Contains(NameSearchString)
+                                       || s.FirstMidName.Contains(NameSearchString));
+            }
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    realtors = realtors.OrderByDescending(s => s.LastName);
+                    break;
+                case "Date":
+                    realtors = realtors.OrderBy(s => s.ListingDate);
+                    break;
+                case "date_desc":
+                    realtors = realtors.OrderByDescending(s => s.ListingDate);
+                    break;
+                default:
+                    realtors = realtors.OrderBy(s => s.LastName);
+                    break;
+            }
+            return View(realtors.ToList());
         }
-
         // GET: Realtor/Details/5
         public ActionResult Details(int? id)
         {
@@ -47,13 +70,22 @@ namespace FTRealtor.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Username,Password,LastName,FirstMidName,ListingDate")] Realtor realtor)
+        public ActionResult Create([Bind(Include = "ID,Username,Password,LastName,FirstMidName,ListingDate,DateListed")] Realtor realtor)
         {
-            if (ModelState.IsValid)
+
+            try
             {
-                db.Realtors.Add(realtor);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Realtors.Add(realtor);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (DataException /* dex */)
+            {
+                //Log the error (uncomment dex variable name and add a line here to write a log.
+                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
 
             return View(realtor);
@@ -77,25 +109,43 @@ namespace FTRealtor.Controllers
         // POST: Realtor/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Username,Password,LastName,FirstMidName,ListingDate")] Realtor realtor)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(realtor).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(realtor);
-        }
-
-        // GET: Realtor/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult EditPost(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var studentToUpdate = db.Realtors.Find(id);
+            if (TryUpdateModel(studentToUpdate, "",
+               new string[] { "LastName", "FirstMidName", "Username", "Password", "DateListed" }))
+            {
+                try
+                {
+                    db.SaveChanges();
+
+                    return RedirectToAction("Index");
+                }
+                catch (DataException /* dex */)
+                {
+                    //Log the error (uncomment dex variable name and add a line here to write a log.
+                    ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
+                }
+            }
+            return View(studentToUpdate);
+        }
+
+        // GET: Realtor/Delete/5
+        public ActionResult Delete(int? id, bool? saveChangesError = false)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if (saveChangesError.GetValueOrDefault())
+            {
+                ViewBag.ErrorMessage = "Delete failed. Try again, and if the problem persists see your system administrator.";
             }
             Realtor realtor = db.Realtors.Find(id);
             if (realtor == null)
@@ -106,13 +156,21 @@ namespace FTRealtor.Controllers
         }
 
         // POST: Realtor/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult Delete(int id)
         {
-            Realtor realtor = db.Realtors.Find(id);
-            db.Realtors.Remove(realtor);
-            db.SaveChanges();
+            try
+            {
+                Realtor realtor = db.Realtors.Find(id);
+                db.Realtors.Remove(realtor);
+                db.SaveChanges();
+            }
+            catch (DataException/* dex */)
+            {
+                //Log the error (uncomment dex variable name and add a line here to write a log.
+                return RedirectToAction("Delete", new { id = id, saveChangesError = true });
+            }
             return RedirectToAction("Index");
         }
 

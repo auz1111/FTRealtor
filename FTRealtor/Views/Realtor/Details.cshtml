@@ -50,6 +50,34 @@
             @Html.DisplayFor(model => model.ListingDate)
         </dd>
 
+
+
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Listings)
+        </dt>
+        <dd>
+            <table class="table">
+                <tr>
+                    <th>House Title</th>
+                    <th>Grade</th>
+                </tr>
+                @foreach (var item in Model.Listings)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.House.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Grade)
+                        </td>
+                    </tr>
+                }
+            </table>
+        </dd>
+
+
+
     </dl>
 </div>
 <p>

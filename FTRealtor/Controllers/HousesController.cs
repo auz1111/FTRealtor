@@ -16,8 +16,14 @@ namespace FTRealtor.Controllers
         private AgencyContext db = new AgencyContext();
 
         // GET: Houses
-        public ActionResult Index()
+        public ActionResult Index(int MLSSearchString)
         {
+            var houses = from s in db.Houses
+                           select s;
+            if (!(MLSSearchString.Equals(0)))
+            {
+                houses = houses.Where(s => s.MLSNum.Equals(MLSSearchString));
+            }
             return View(db.Houses.ToList());
         }
 
