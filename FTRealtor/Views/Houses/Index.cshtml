@@ -1,4 +1,5 @@
-﻿@model IEnumerable<FTRealtor.Models.House>
+﻿@using Microsoft.AspNet.Identity
+@model IEnumerable<FTRealtor.Models.House>
 
 @{
     ViewBag.Title = "Index";
@@ -7,12 +8,39 @@
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @if (Request.IsAuthenticated)
+    {
+        @Html.ActionLink("Create New", "Create")
+    }
 </p>
 @using (Html.BeginForm())
 {
     <p>
-        Find by MLS #: @Html.TextBox("MLSSearchString")
+        Find by MLS #: @Html.TextBox("MLSSearchInt", null, new { type = "number" })
+        <input type="submit" value="Search" />
+
+        Find by Street 1: @Html.TextBox("Street1SearchString", null)
+        <input type="submit" value="Search" />
+
+        Find by Street 2: @Html.TextBox("Street2SearchString", null)
+        <input type="submit" value="Search" />
+   
+        Find by City: @Html.TextBox("CitySearchString", null)
+        <input type="submit" value="Search" />
+
+        Find by State: @Html.TextBox("StateSearchString", null)
+        <input type="submit" value="Search" />
+
+        Find by Zip: @Html.TextBox("ZipSearchString", null)
+        <input type="submit" value="Search" />
+
+        Find by Bedrooms: @Html.TextBox("BedroomsSearchInt", null, new { type = "number" })
+        <input type="submit" value="Search" />
+
+        Find by Bathrooms: @Html.TextBox("BathroomSearchInt", null, new { type = "number" })
+        <input type="submit" value="Search" />
+
+        Find by Square Feet: @Html.TextBox("SQFTSearchInt", null, new { type = "number" })
         <input type="submit" value="Search" />
     </p>
 }
@@ -126,9 +154,12 @@
             @Html.DisplayFor(modelItem => item.Description)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.HouseID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.HouseID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.HouseID })
+            @if (Request.IsAuthenticated)
+            {
+                @Html.ActionLink("Edit", "Edit", new { id=item.HouseID }) <text>|</text>
+                @Html.ActionLink("Details", "Details", new { id=item.HouseID }) <text>|</text>
+                @Html.ActionLink("Delete", "Delete", new { id=item.HouseID })
+            }
         </td>
     </tr>
 }

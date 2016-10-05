@@ -16,30 +16,73 @@ namespace FTRealtor.Controllers
         private AgencyContext db = new AgencyContext();
 
         // GET: Houses
-        public ActionResult Index(int MLSSearchString)
+        public ActionResult Index(int? MLSSearchInt, string Street1SearchString, string Street2SearchString, string CitySearchString, string StateSearchString, string ZipSearchString, int? BedroomsSearchInt, int? BathroomsSearchInt, int? SQFTSearchInt)
         {
             var houses = from s in db.Houses
                            select s;
-            if (!(MLSSearchString.Equals(0)))
+            if (MLSSearchInt != null)
             {
-                houses = houses.Where(s => s.MLSNum.Equals(MLSSearchString));
+                houses = houses.Where(s => s.MLSNum.Equals(MLSSearchInt));
             }
+
+            if (!String.IsNullOrEmpty(Street1SearchString))
+            {
+                houses = houses.Where(s => s.Street1.Contains(Street1SearchString));
+            }
+
+            if (!String.IsNullOrEmpty(Street2SearchString))
+            {
+                houses = houses.Where(s => s.Street2.Contains(Street2SearchString));
+            }
+
+            if (!String.IsNullOrEmpty(CitySearchString))
+            {
+                houses = houses.Where(s => s.City.Contains(CitySearchString));
+            }
+
+            if (!String.IsNullOrEmpty(ZipSearchString))
+            {
+                houses = houses.Where(s => s.Zip.Contains(ZipSearchString));
+            }
+
+            if (BedroomsSearchInt != null)
+            {
+                houses = houses.Where(s => s.Bedrooms.Equals(BedroomsSearchInt));
+            }
+
+            if (BathroomsSearchInt != null)
+            {
+                houses = houses.Where(s => s.Bathrooms.Equals(BathroomsSearchInt));
+            }
+
+            if (SQFTSearchInt != null)
+            {
+                houses = houses.Where(s => s.SquareFeet.Equals(SQFTSearchInt));
+            }
+
             return View(db.Houses.ToList());
         }
 
         // GET: Houses/Details/5
         public ActionResult Details(int? id)
         {
-            if (id == null)
+
+            if(Request.IsAuthenticated)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            House house = db.Houses.Find(id);
-            if (house == null)
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                House house = db.Houses.Find(id);
+                if (house == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(house);
+            }else
             {
-                return HttpNotFound();
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
             }
-            return View(house);
         }
 
         // GET: Houses/Create
@@ -55,29 +98,44 @@ namespace FTRealtor.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "HouseID,Title,MLSNum,Street1,Street2,City,State,Zip,Neighborhood,SalesPrice,DateListed,Bedrooms,Bathrooms,Photos,GarageSize,SquareFeet,LotSize,Description")] House house)
         {
-            if (ModelState.IsValid)
-            {
-                db.Houses.Add(house);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
 
-            return View(house);
+            if (Request.IsAuthenticated)
+            {
+                if (ModelState.IsValid)
+                {
+                    db.Houses.Add(house);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+
+                return View(house);
+            }else
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+            }
         }
 
         // GET: Houses/Edit/5
         public ActionResult Edit(int? id)
         {
-            if (id == null)
+
+            if (Request.IsAuthenticated)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                House house = db.Houses.Find(id);
+                if (house == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(house);
             }
-            House house = db.Houses.Find(id);
-            if (house == null)
+            else
             {
-                return HttpNotFound();
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
             }
-            return View(house);
         }
 
         // POST: Houses/Edit/5
@@ -99,16 +157,24 @@ namespace FTRealtor.Controllers
         // GET: Houses/Delete/5
         public ActionResult Delete(int? id)
         {
-            if (id == null)
+
+            if (Request.IsAuthenticated)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                House house = db.Houses.Find(id);
+                if (house == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(house);
             }
-            House house = db.Houses.Find(id);
-            if (house == null)
+            else
             {
-                return HttpNotFound();
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
             }
-            return View(house);
         }
 
         // POST: Houses/Delete/5
