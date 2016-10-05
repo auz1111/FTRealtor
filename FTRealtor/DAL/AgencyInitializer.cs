@@ -27,12 +27,12 @@ namespace FTRealtor.DAL
             context.SaveChanges();
             var houses = new List<House>
             {
-            new House{HouseID=1050,Title="Clement's Ranch",MLSNum=111111,Street1="101 Hardwood Drive",Street2="Suite 11",City="Columbia",State="SC",Zip="29223",Neighborhood="Killian Greene",SalesPrice=124000,DateListed=DateTime.Parse("2003-09-01"),Bedrooms=4,Bathrooms=3,Photos="image.jpg",GarageSize=800,SquareFeet=2200,LotSize=3200,Description="Starter home"},
-            new House{HouseID=4022,Title="The Cave",MLSNum=111111,Street1="101 Hardwood Drive",Street2="Suite 11",City="Columbia",State="SC",Zip="29223",Neighborhood="Killian Greene",SalesPrice=124000,DateListed=DateTime.Parse("2003-09-01"),Bedrooms=4,Bathrooms=3,Photos="image.jpg",GarageSize=800,SquareFeet=2200,LotSize=3200,Description="Starter home"},
-            new House{HouseID=4041,Title="The Outworld",MLSNum=111111,Street1="101 Hardwood Drive",Street2="Suite 11",City="Columbia",State="SC",Zip="29223",Neighborhood="Killian Greene",SalesPrice=124000,DateListed=DateTime.Parse("2003-09-01"),Bedrooms=4,Bathrooms=3,Photos="image.jpg",GarageSize=800,SquareFeet=2200,LotSize=3200,Description="Starter home"},
-            new House{HouseID=1045,Title="The Plains",MLSNum=111111,Street1="101 Hardwood Drive",Street2="Suite 11",City="Columbia",State="SC",Zip="29223",Neighborhood="Killian Greene",SalesPrice=124000,DateListed=DateTime.Parse("2003-09-01"),Bedrooms=4,Bathrooms=3,Photos="image.jpg",GarageSize=800,SquareFeet=2200,LotSize=3200,Description="Starter home"},
-            new House{HouseID=3141,Title="The Mansion",MLSNum=111111,Street1="101 Hardwood Drive",Street2="Suite 11",City="Columbia",State="SC",Zip="29223",Neighborhood="Killian Greene",SalesPrice=124000,DateListed=DateTime.Parse("2003-09-01"),Bedrooms=4,Bathrooms=3,Photos="image.jpg",GarageSize=800,SquareFeet=2200,LotSize=3200,Description="Starter home"},
-            new House{HouseID=2021,Title="Underground Lair",MLSNum=111111,Street1="101 Hardwood Drive",Street2="Suite 11",City="Columbia",State="SC",Zip="29223",Neighborhood="Killian Greene",SalesPrice=124000,DateListed=DateTime.Parse("2003-09-01"),Bedrooms=4,Bathrooms=3,Photos="image.jpg",GarageSize=800,SquareFeet=2200,LotSize=3200,Description="Starter home"}
+            new House{HouseID=1050,Title="Clement's Ranch",MLSNum=1111,Street1="101 Hardwood Drive",Street2="Suite 11",City="Columbia",State="SC",Zip="29223",Neighborhood="Killian Greene",SalesPrice=124000,DateListed=DateTime.Parse("2003-09-01"),Bedrooms=4,Bathrooms=3,Photos="image.jpg",GarageSize=800,SquareFeet=2200,LotSize=3200,Description="Starter home"},
+            new House{HouseID=4022,Title="The Cave",MLSNum=2222,Street1="13 Elm Street",Street2="Suite 22",City="Bend",State="OR",Zip="97702",Neighborhood="Killian Greene",SalesPrice=124000,DateListed=DateTime.Parse("2003-09-01"),Bedrooms=4,Bathrooms=3,Photos="image.jpg",GarageSize=800,SquareFeet=2200,LotSize=3200,Description="Starter home"},
+            new House{HouseID=4041,Title="The Outworld",MLSNum=3333,Street1="1234 ABC Lane",Street2="Apartment 123",City="Chicago",State="IL",Zip="34221",Neighborhood="Killian Greene",SalesPrice=124000,DateListed=DateTime.Parse("2003-09-01"),Bedrooms=4,Bathrooms=3,Photos="image.jpg",GarageSize=800,SquareFeet=2200,LotSize=3200,Description="Starter home"},
+            new House{HouseID=1045,Title="The Plains",MLSNum=4444,Street1="222 Twin Two Drive",Street2="Suite 44",City="Charlotte",State="NC",Zip="29087",Neighborhood="Killian Greene",SalesPrice=124000,DateListed=DateTime.Parse("2003-09-01"),Bedrooms=4,Bathrooms=3,Photos="image.jpg",GarageSize=800,SquareFeet=2200,LotSize=3200,Description="Starter home"},
+            new House{HouseID=3141,Title="The Mansion",MLSNum=5555,Street1="5245 Long Beard Ave",Street2="Suite 55",City="Sacramento",State="CA",Zip="10980",Neighborhood="Killian Greene",SalesPrice=124000,DateListed=DateTime.Parse("2003-09-01"),Bedrooms=4,Bathrooms=3,Photos="image.jpg",GarageSize=800,SquareFeet=2200,LotSize=3200,Description="Starter home"},
+            new House{HouseID=2021,Title="Underground Lair",MLSNum=6666,Street1="911 Emergency Circle",Street2="Suite 66",City="Bend",State="OR",Zip="97702",Neighborhood="Killian Greene",SalesPrice=124000,DateListed=DateTime.Parse("2003-09-01"),Bedrooms=4,Bathrooms=3,Photos="image.jpg",GarageSize=800,SquareFeet=2200,LotSize=3200,Description="Starter home"}
             };
             houses.ForEach(s => context.Houses.Add(s));
             context.SaveChanges();
@@ -42,6 +42,7 @@ namespace FTRealtor.DAL
             new Listing{RealtorID=1,HouseID=4022,Grade=Grade.B},
             new Listing{RealtorID=2,HouseID=4041,Grade=Grade.C},
             new Listing{RealtorID=3,HouseID=2021,Grade=Grade.D},
+            new Listing{RealtorID=1,HouseID=1045,Grade=Grade.B},
             };
             listings.ForEach(s => context.Listings.Add(s));
             context.SaveChanges();
