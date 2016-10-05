@@ -47,16 +47,17 @@ namespace FTRealtor.Controllers
         // GET: Realtor/Details/5
         public ActionResult Details(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Realtor realtor = db.Realtors.Find(id);
-            if (realtor == null)
-            {
-                return HttpNotFound();
-            }
-            return View(realtor);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Realtor realtor = db.Realtors.Find(id);
+                if (realtor == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(realtor);
+            
         }
 
         // GET: Realtor/Create
@@ -72,38 +73,52 @@ namespace FTRealtor.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,Username,Password,LastName,FirstMidName,ListingDate,DateListed")] Realtor realtor)
         {
-
-            try
+            if (Request.IsAuthenticated)
             {
-                if (ModelState.IsValid)
+                try
                 {
-                    db.Realtors.Add(realtor);
-                    db.SaveChanges();
-                    return RedirectToAction("Index");
+                    if (ModelState.IsValid)
+                    {
+                        db.Realtors.Add(realtor);
+                        db.SaveChanges();
+                        return RedirectToAction("Index");
+                    }
                 }
-            }
-            catch (DataException /* dex */)
-            {
-                //Log the error (uncomment dex variable name and add a line here to write a log.
-                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
-            }
+                catch (DataException /* dex */)
+                {
+                    //Log the error (uncomment dex variable name and add a line here to write a log.
+                    ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+                }
 
-            return View(realtor);
+                return View(realtor);
+
+            }
+            else
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+            }
         }
 
         // GET: Realtor/Edit/5
         public ActionResult Edit(int? id)
         {
-            if (id == null)
+            if (Request.IsAuthenticated)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Realtor realtor = db.Realtors.Find(id);
+                if (realtor == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(realtor);
             }
-            Realtor realtor = db.Realtors.Find(id);
-            if (realtor == null)
+            else
             {
-                return HttpNotFound();
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
             }
-            return View(realtor);
         }
 
         // POST: Realtor/Edit/5
@@ -139,20 +154,28 @@ namespace FTRealtor.Controllers
         // GET: Realtor/Delete/5
         public ActionResult Delete(int? id, bool? saveChangesError = false)
         {
-            if (id == null)
+            if (Request.IsAuthenticated)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                if (saveChangesError.GetValueOrDefault())
+                {
+                    ViewBag.ErrorMessage = "Delete failed. Try again, and if the problem persists see your system administrator.";
+                }
+                Realtor realtor = db.Realtors.Find(id);
+                if (realtor == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(realtor);
+
             }
-            if (saveChangesError.GetValueOrDefault())
+            else
             {
-                ViewBag.ErrorMessage = "Delete failed. Try again, and if the problem persists see your system administrator.";
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
             }
-            Realtor realtor = db.Realtors.Find(id);
-            if (realtor == null)
-            {
-                return HttpNotFound();
-            }
-            return View(realtor);
         }
 
         // POST: Realtor/Delete/5

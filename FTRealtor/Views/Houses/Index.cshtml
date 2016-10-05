@@ -156,8 +156,8 @@
         <td>
             @if (Request.IsAuthenticated)
             {
+                @Html.ActionLink("Details", "Details", new { id = item.HouseID }) <text>|</text>
                 @Html.ActionLink("Edit", "Edit", new { id=item.HouseID }) <text>|</text>
-                @Html.ActionLink("Details", "Details", new { id=item.HouseID }) <text>|</text>
                 @Html.ActionLink("Delete", "Delete", new { id=item.HouseID })
             }
         </td>

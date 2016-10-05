@@ -7,7 +7,10 @@
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @if (Request.IsAuthenticated)
+    {
+        @Html.ActionLink("Create New", "Create")
+    }
 </p>
 @using (Html.BeginForm())
 {
@@ -50,9 +53,14 @@
                 @Html.DisplayFor(modelItem => item.ListingDate)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
-                @Html.ActionLink("Details", "Details", new { id = item.ID }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+                
+                @Html.ActionLink("Details", "Details", new { id = item.ID })
+                @if (Request.IsAuthenticated)
+                {
+                    <text>|</text>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.ID }) <text>|</text>
+                    @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+                }
             </td>
         </tr>
     }
